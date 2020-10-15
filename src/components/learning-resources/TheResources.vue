@@ -4,8 +4,11 @@
     <!-- event attribute above "falls through" to the base-button's root `button` html element -->
     <base-button @click="setSelectedTab('add-resource')" :mode="addResButton">Add Resource</base-button>
   </base-card>
-  <component :is="selectedTab"></component>
-  <!-- use provide + inject to pass props to dynamic components -->
+  <keep-alive>
+    <component :is="selectedTab"></component>
+  </keep-alive>
+  <!-- use provide + inject to provide child dynamic components with data from parent (akin to passing down props) -->
+  <!-- use provide + inject to provide child dynamic components with methods to manipulate state in parent, e.g., for sending form data up to parent to do something -->
 </template>
 
 <script>
@@ -31,17 +34,28 @@ export default {
       return this.selectedTab === 'stored-resources' ? null : 'flat'
     },
     addResButton() {
-      return this.selectedTab === 'add-resources' ? null : 'flat'
+      return this.selectedTab === 'add-resource' ? null : 'flat'
     }
   },
   provide() {
     return {
-      resources: this.storedResources
+      resources: this.storedResources,
+      addResource: this.addResource
     }
   },
   methods : {
     setSelectedTab(tab) {
       this.selectedTab = tab
+    },
+    addResource(title, description, url) {
+      const newResource = {
+        id: new Date().toISOString(),
+        title,
+        description,
+        url
+      };
+      this.storedResources.unshift(newResource);
+      this.selectedTab = 'stored-resources'
     }
   }
 }
