@@ -1,22 +1,24 @@
 <template>
-  <div @click="$emit('close')">
-    <dialog open>
-      <header>
-        <slot name="header">
-          <h2>{{ title }}</h2>
-          <!-- above markup is the default if no markup provided within component tags, but for there to be this markup the title prop needs to be provided, otherwise it'll just be blank -->
-        </slot>
-      </header>
-      <section>
-        <slot></slot>
-      </section>
-      <menu>
-        <slot name="actions">
-          <base-button @click="$emit('close')">Close</base-button>
-        </slot>
-      </menu>
-    </dialog>
-  </div>
+  <teleport to="body">
+    <div @click="$emit('close')">
+      <dialog open>
+        <header>
+          <slot name="header">
+            <h2>{{ title }}</h2>
+            <!-- above markup is the default if no markup provided within component tags, but for there to be this markup the title prop needs to be provided, otherwise it'll just be blank -->
+          </slot>
+        </header>
+        <section>
+          <slot></slot>
+        </section>
+        <menu>
+          <slot name="actions">
+            <base-button @click="$emit('close')">Close</base-button>
+          </slot>
+        </menu>
+      </dialog>
+    </div>
+  </teleport>
 </template>
 
 <script>
